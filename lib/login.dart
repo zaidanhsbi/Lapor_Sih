@@ -29,7 +29,7 @@ class LoginScreen extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment
-                  .stretch, // Supaya tombol full-width sesuai container
+                  .stretch, 
               children: [
                  Text(
                   "Selamat Datang!",
