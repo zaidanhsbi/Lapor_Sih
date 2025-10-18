@@ -15,9 +15,14 @@ class Login extends StatelessWidget {
   }
 }
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+ 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
 
+class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,17 +33,16 @@ class LoginScreen extends StatelessWidget {
         child: Center(
           child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment
-                  .stretch, 
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                 Text(
+                Text(
                   "Selamat Datang!",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 40,
                     fontFamily: 'Helvetica',
                     letterSpacing: figmaSpacing(-5, 40),
-                    color: AppColors.secondary
+                    color: AppColors.secondary,
                   ),
                 ),
                 const SizedBox(height: 40),
@@ -51,7 +55,6 @@ class LoginScreen extends StatelessWidget {
                       fontSize: 16,
                       fontFamily: "Montserrat",
                       fontWeight: FontWeight.w400,
-
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(48),
@@ -65,16 +68,16 @@ class LoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 TextField(
+                  
                   obscureText: true,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.grey[300],
                     hintText: "Masukan password",
-                                        hintStyle: TextStyle(
+                    hintStyle: TextStyle(
                       fontSize: 16,
                       fontFamily: "Montserrat",
                       fontWeight: FontWeight.w400,
-
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(48),
@@ -119,7 +122,7 @@ class LoginScreen extends StatelessWidget {
                         fontSize: 16,
                         fontFamily: "Montserrat",
                         fontWeight: FontWeight.w600,
-                        ),
+                      ),
                     ),
                   ),
                 ),

@@ -15,10 +15,16 @@ class Register extends StatelessWidget {
   }
 }
 
-class register extends StatelessWidget {
-  const register ({super.key});
+
+class register extends StatefulWidget {
+  const register({super.key});
 
   @override
+  State<register> createState() => _registerState();
+}
+
+class _registerState extends State<register> {
+   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
