@@ -1,4 +1,2 @@
-double figmaSpacing(double percent, double fontSize) {
-  return (percent / 100) * fontSize;
-}
+double figmaSpacing(double percent, double fontSize) => (percent / 100) * fontSize;
 
