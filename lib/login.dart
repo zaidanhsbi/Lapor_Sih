@@ -1,28 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:lapor_sih/register.dart';
+import 'package:lapor_sih/services/auth_service.dart';
 import 'package:lapor_sih/utils/colors.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'utils/convert.dart';
 
-class Login extends StatelessWidget {
-  const Login({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Lapor Sih',
-      home: const LoginScreen(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
- 
+
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,10 +50,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 40),
                 TextField(
+                  controller: _emailController,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.grey[300],
-                    hintText: "Masukan user atau email",
+                    hintText: "Masukan email",
                     hintStyle: TextStyle(
                       fontSize: 16,
                       fontFamily: "Montserrat",
@@ -68,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 20),
                 TextField(
-                  
+                  controller: _passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     filled: true,
@@ -104,8 +108,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   child: ElevatedButton(
-                    onPressed: () {
-                      // TODO: implement login logic
+                    onPressed: () async {
+                      final email = _emailController.text.trim();
+                      final password = _passwordController.text.trim();
+                      await AuthService().signIn(
+                        context,
+                        email,
+                        password,
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
