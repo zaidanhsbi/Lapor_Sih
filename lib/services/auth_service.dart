@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService {
-  final supabase = Supabase.instance.client.auth;
+  final supabase = Supabase.instance.client;
 
   void _showSnackbar(BuildContext context, String message, {bool isError = true}) {
     final snackBar = SnackBar(
       content: Text(message),
       backgroundColor: isError ? Colors.red.shade600 : Colors.green.shade600,
-      duration: Duration(seconds: 2),
+      duration: Duration(seconds: 1),
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -26,25 +26,46 @@ class AuthService {
         return false;
       }
 
-      final response = await supabase.signUp(
+      final response = await supabase.auth.signUp(
         email: email.trim(),
         password: password,
       );
 
-      if (response.user != null) {
-        _showSnackbar(
-          context,
-          'Akun berhasil dibuat!',
-          isError: false,
-        );
-        return true;
+      // Cek apakah signup berhasil
+      if (response.user == null) {
+        _showSnackbar(context, "Gagal daftar. Coba lagi!");
+        return false;
       }
+
+      // Ambil user yang baru dibuat
+      final user = response.user!;
+      final userEmail = user.email ?? "";
+      String username = "";
+      for (int i = 0; i < userEmail.length; i++) {
+        if (userEmail[i] == "@") {
+          break;
+        }
+        username += userEmail[i];
+      }
+
+  
+        await supabase.from('pengguna').insert({
+          'id': user.id, 
+          'username': username,
+        });
+
+
+      _showSnackbar(
+        context,
+        'Akun berhasil dibuat!',
+        isError: false,
+      );
+      return true;
       
-      _showSnackbar(context, "Gagal daftar. Coba lagi!");
-      return false;
     } on AuthException catch (e) {
       String message;
       switch (e.message) {
+        case 'User already registered':
         case 'Email already registered':
           message = 'Email sudah dipakai!';
           break;
@@ -60,7 +81,7 @@ class AuthService {
       _showSnackbar(context, message);
       return false;
     } catch (e) {
-      _showSnackbar(context, "Koneksi error. Cek internet kamu!");
+      _showSnackbar(context, "Error: ${e.toString()}");
       return false;
     }
   }
@@ -76,7 +97,7 @@ class AuthService {
         return false;
       }
 
-      final response = await supabase.signInWithPassword(
+      final response = await supabase.auth.signInWithPassword(
         email: email.trim(),
         password: password,
       );
@@ -84,7 +105,7 @@ class AuthService {
       if (response.user != null) {
         _showSnackbar(
           context,
-        'Login berhasil! Selamat datang!',
+          'Login berhasil! Selamat datang!',
           isError: false,
         );
         return true;
@@ -111,6 +132,11 @@ class AuthService {
       return false;
     }
   }
+
+  // SIGN OUT (bonus)
+  Future<void> signOut() async {
+    await supabase.auth.signOut();
+  }
 }
 
 // Cara pakai di widget:
@@ -118,7 +144,7 @@ class AuthService {
 // ElevatedButton(
 //   onPressed: () async {
 //     final authService = AuthService();
-//     final success = await authService.signIn(
+//     final success = await authService.signUpNewUser(
 //       context,
 //       emailController.text,
 //       passwordController.text,
@@ -131,5 +157,5 @@ class AuthService {
 //       );
 //     }
 //   },
-//   child: Text('Login'),
+//   child: Text('Daftar'),
 // )
