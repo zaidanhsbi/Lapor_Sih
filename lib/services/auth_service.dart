@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lapor_sih/userMainPage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService {
@@ -101,6 +102,31 @@ class AuthService {
         email: email.trim(),
         password: password,
       );
+
+      // Ambil user yang baru dibuat
+      final user = response.user!;
+      final userEmail = user.email ?? "";
+      String username = "";
+      for (int i = 0; i < userEmail.length; i++) {
+        if (userEmail[i] == "@") {
+          break;
+        }
+        username += userEmail[i];
+      }
+      //Login logic berdasarkan roles
+      if(username.contains('admin') || username.contains('Admin')){
+        //Navigate to adminMainPage
+      }else{
+          print("Berhasil Login dengan username :" + '$username');
+         Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const UserMainPage(),
+            ),
+         );
+      }
+
+
 
       if (response.user != null) {
         _showSnackbar(
