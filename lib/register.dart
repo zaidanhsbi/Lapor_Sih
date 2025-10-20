@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lapor_sih/login.dart';
 import 'package:lapor_sih/services/auth_service.dart';
-import 'package:lapor_sih/userMain.dart';
 import 'utils/colors.dart';
 import 'utils/convert.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -100,7 +99,7 @@ class _RegisterState extends State<Register> {
                     borderRadius: BorderRadius.circular(48),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.secondary.withOpacity(0.3),
+                        color: AppColors.secondary,
                         spreadRadius: 1,
                         blurRadius: 8,
                         offset: const Offset(0, 4),
