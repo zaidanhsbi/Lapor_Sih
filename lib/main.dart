@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lapor_sih/login.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
+import 'utils/config.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); 
@@ -12,10 +12,6 @@ Future<void> main() async {
   } catch (e) {
     print('❌ dotenv error: $e');
   }
-
-   final String supabaseUrl = dotenv.env['SUPABASE_URL'] ?? '';
-  final String anonKey = dotenv.env['SUPABASE_PUBLISHABLE_OR_ANON_KEY'] ?? '';
-
 
   print('✅ URL: $supabaseUrl');
   print('✅ ANON: ${anonKey}');
