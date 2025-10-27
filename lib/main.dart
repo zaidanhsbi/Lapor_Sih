@@ -4,9 +4,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'utils/config.dart';
 
+
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized(); 
-    try {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  try {
     await dotenv.load(fileName: ".env");
     print('✅ dotenv loaded');
   } catch (e) {
@@ -15,10 +17,7 @@ Future<void> main() async {
 
   print('✅ URL: $supabaseUrl');
   print('✅ ANON: ${anonKey}');
-  await Supabase.initialize(
-    url: supabaseUrl,
-    anonKey: anonKey,
-  );
+  await Supabase.initialize(url: supabaseUrl, anonKey: anonKey);
   runApp(const MyApp());
 }
 
@@ -30,6 +29,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: const LoginScreen(),
       debugShowCheckedModeBanner: false,
-    ); 
+    );
   }
-} 
+}

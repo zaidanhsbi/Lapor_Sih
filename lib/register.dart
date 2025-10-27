@@ -3,9 +3,6 @@ import 'package:lapor_sih/login.dart';
 import 'package:lapor_sih/services/auth_service.dart';
 import 'utils/colors.dart';
 import 'utils/convert.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-
-
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -17,6 +14,7 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _isPasswordVisible = false; 
 
   @override
   void dispose() {
@@ -72,7 +70,7 @@ class _RegisterState extends State<Register> {
                 const SizedBox(height: 20),
                 TextField(
                   controller: _passwordController,
-                  obscureText: true,
+                  obscureText: !_isPasswordVisible,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.grey[300],
@@ -89,6 +87,19 @@ class _RegisterState extends State<Register> {
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 20,
                       vertical: 14,
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Colors.grey, 
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
                     ),
                   ),
                 ),
@@ -116,7 +127,6 @@ class _RegisterState extends State<Register> {
                         password,
                       );
                     },
-
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(48),

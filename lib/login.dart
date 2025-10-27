@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lapor_sih/register.dart';
 import 'package:lapor_sih/services/auth_service.dart';
 import 'package:lapor_sih/utils/colors.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'services/requestPermisson.dart';
 import 'utils/convert.dart';
-
-
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,9 +13,17 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _isPasswordVisible = false; // Track password visibility
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await requestPermissions(context);
+    });
+  }
 
   @override
   void dispose() {
@@ -73,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 20),
                 TextField(
                   controller: _passwordController,
-                  obscureText: true,
+                  obscureText: !_isPasswordVisible, // Toggle visibility
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.grey[300],
@@ -90,6 +96,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 20,
                       vertical: 14,
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Colors.grey, 
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
                     ),
                   ),
                 ),
@@ -111,19 +130,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () async {
                       final email = _emailController.text.trim();
                       final password = _passwordController.text.trim();
-                      await AuthService().signIn(
-                        context,
-                        email,
-                        password,
-                      );
+                      await AuthService().signIn(context, email, password);
                     },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(48),
                       ),
                       backgroundColor: AppColors.secondary,
-                      elevation:
-                          0, // karena shadow sudah pakai boxShadow di container
+                      elevation: 0,
                     ),
                     child: const Text(
                       "Login",

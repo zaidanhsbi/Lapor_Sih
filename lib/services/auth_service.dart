@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:lapor_sih/adminMainPage.dart';
 import 'package:lapor_sih/userMainPage.dart';
+import 'package:lapor_sih/utils/colors.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 
 class AuthService {
   final supabase = Supabase.instance.client;
 
-  void _showSnackbar(BuildContext context, String message, {bool isError = true}) {
+  void _showSnackbar(
+    BuildContext context,
+    String message, {
+    bool isError = true,
+  }) {
     final snackBar = SnackBar(
       content: Text(message),
-      backgroundColor: isError ? Colors.red.shade600 : Colors.green.shade600,
+      backgroundColor: isError ? AppColors.danger : AppColors.success,
       duration: Duration(seconds: 1),
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  // SIGN UP 
+  // SIGN UP
   Future<bool> signUpNewUser(
     BuildContext context,
     String email,
@@ -49,20 +56,13 @@ class AuthService {
         username += userEmail[i];
       }
 
-  
-        await supabase.from('pengguna').insert({
-          'id': user.id, 
-          'username': username,
-        });
+      await supabase.from('pengguna').insert({
+        'id': user.id,
+        'username': username,
+      });
 
-
-      _showSnackbar(
-        context,
-        'Akun berhasil dibuat!',
-        isError: false,
-      );
+      _showSnackbar(context, 'Akun berhasil dibuat!', isError: false);
       return true;
-      
     } on AuthException catch (e) {
       String message;
       switch (e.message) {
@@ -106,6 +106,7 @@ class AuthService {
       // Ambil user yang baru dibuat
       final user = response.user!;
       final userEmail = user.email ?? "";
+     final userId = user.id;
       String username = "";
       for (int i = 0; i < userEmail.length; i++) {
         if (userEmail[i] == "@") {
@@ -114,19 +115,18 @@ class AuthService {
         username += userEmail[i];
       }
       //Login logic berdasarkan roles
-      if(username.contains('admin') || username.contains('Admin')){
-        //Navigate to adminMainPage
-      }else{
-          print("Berhasil Login dengan username :" + '$username');
-         Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const UserMainPage(),
-            ),
-         );
+      if (username.contains('admin') || username.contains('Admin')) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AdminMainPage()),
+        );
+      } else {
+        print("Berhasil Login dengan username :" + '$username');
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const UserMainPage()),
+        );
       }
-
-
 
       if (response.user != null) {
         _showSnackbar(
@@ -136,7 +136,7 @@ class AuthService {
         );
         return true;
       }
-      
+
       _showSnackbar(context, "Login gagal");
       return false;
     } on AuthException catch (e) {
@@ -165,23 +165,3 @@ class AuthService {
   }
 }
 
-// Cara pakai di widget:
-// 
-// ElevatedButton(
-//   onPressed: () async {
-//     final authService = AuthService();
-//     final success = await authService.signUpNewUser(
-//       context,
-//       emailController.text,
-//       passwordController.text,
-//     );
-//     
-//     if (success) {
-//       Navigator.pushReplacement(
-//         context,
-//         MaterialPageRoute(builder: (context) => UserMain()),
-//       );
-//     }
-//   },
-//   child: Text('Daftar'),
-// )
