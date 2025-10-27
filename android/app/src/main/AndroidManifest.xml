@@ -20,9 +20,8 @@
     </queries>
 
     <application
-        android:label="lapor_sih"
-        android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Lapor Sih!"
+        android:icon="@mipmap/launcher_icon">
 
         <activity
             android:name=".MainActivity"
